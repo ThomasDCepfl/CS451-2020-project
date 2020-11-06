@@ -22,6 +22,7 @@ public class Coordinator {
     private int signalPort;
 
     private Socket signalSocket = null;
+    private boolean closed = false;
 
     public Coordinator(int pid, String barrierIp, int barrierPort, String signalIp, int signalPort) {
         this.pid = pid;
@@ -46,8 +47,12 @@ public class Coordinator {
         }
     }
 
-    public void finishedBroadcasting() {
-	try {
+    synchronized public void finishedBroadcasting() {
+        if (closed) {
+            return;
+        }
+
+	    try {
             signalSocket.close();
         } catch (IOException ex) {
             System.out.println("I/O error: " + ex.getMessage());

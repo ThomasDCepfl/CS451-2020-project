@@ -6,10 +6,15 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Main {
+    public static Coordinator coordinator = null;
 
     private static void handleSignal() {
         //immediately stop network packet processing
         System.out.println("Immediately stopping network packet processing.");
+
+        if (coordinator != null) {
+            coordinator.finishedBroadcasting();
+        }
 
         //write/flush output file if necessary
         System.out.println("Writing output.");
@@ -50,19 +55,19 @@ public class Main {
         }
 
 
-        Coordinator coordinator = new Coordinator(parser.myId(), parser.barrierIp(), parser.barrierPort(), parser.signalIp(), parser.signalPort());
+        coordinator = new Coordinator(parser.myId(), parser.barrierIp(), parser.barrierPort(), parser.signalIp(), parser.signalPort());
 
-	System.out.println("Waiting for all processes for finish initialization");
+        System.out.println("Waiting for all processes for finish initialization");
         coordinator.waitOnBarrier();
 
-	System.out.println("Broadcasting messages...");
+        System.out.println("Broadcasting messages...");
 
-	System.out.println("Signaling end of broadcasting messages");
+        System.out.println("Signaling end of broadcasting messages");
         coordinator.finishedBroadcasting();
 
-	while (true) {
-	    // Sleep for 1 hour
-	    Thread.sleep(60 * 60 * 1000);
-	}
+        while (true) {
+            // Sleep for 1 hour
+            Thread.sleep(60 * 60 * 1000);
+        }
     }
 }
