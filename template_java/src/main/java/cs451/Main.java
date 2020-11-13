@@ -71,34 +71,11 @@ public class Main {
         System.out.println("Waiting for all processes for finish initialization");
         coordinator.waitOnBarrier();
 
-        /*
-        ArrayList<Host> hosts = new ArrayList<>(parser.hosts());
-        FIFOBroadcast fifo = null;
-        for (Host host: hosts) {
-            System.out.println(host.getId() + ", " + host.getIp() + ", " + host.getPort());
-            Integer hid = host.getId();
-            if(pid == id) {
-                Integer port = host.getPort();
-                InetAddress ip = null;
-                try {
-                    ip = InetAddress.getByName(parser.signalIp());
-                } catch (UnknownHostException e) {
-                    System.out.println("Couldn't find IP address");
-                }
-                fifo = new FIFOBroadcast(hosts, port, id, m -> System.out.println("FIFO deliver " + m));
-            }
-        }
-
-        System.out.println("Broadcasting messages...");
-        fifo.begin();
-        fifo.broadcast(new Message("Message tres important", id, id, id, false));
-        */
-
         ArrayList<Host> hosts = new ArrayList<>(parser.hosts());
         for (Host host: hosts) {
             System.out.println(host.getId() + ", " + host.getIp() + ", " + host.getPort());
             Integer hid = host.getId();
-            if(pid == id) {
+            if(hid == id) {
                 Integer port = host.getPort();
                 InetAddress ip = null;
                 try {
