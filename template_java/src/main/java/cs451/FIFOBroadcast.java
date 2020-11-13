@@ -28,7 +28,7 @@ public class FIFOBroadcast implements Broadcast, Observer{
     }
 
     @Override
-    public void deliver(Message m) { // how to provide message ordering
+    public void deliver(Message m) {
         Integer mId = m.getId();
 
         if(mId >= order[m.getSenderAck()]) {
@@ -38,8 +38,9 @@ public class FIFOBroadcast implements Broadcast, Observer{
                 Message transmission = recv.get(id);
                 Integer senderAck = transmission.getSenderAck();
                 if(id == order[senderAck]) {
-                    obs.deliver(transmission);
+                    recv.remove(id);
                     ++order[senderAck];
+                    obs.deliver(transmission);
                 }
             }
         }
