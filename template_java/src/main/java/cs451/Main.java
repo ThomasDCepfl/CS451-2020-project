@@ -12,16 +12,16 @@ import java.util.stream.Stream;
 
 public class Main {
 
-    //private static Process p;
+    private static Process p;
 
     private static void handleSignal() {
         //immediately stop network packet processing
         System.out.println("Immediately stopping network packet processing.");
-        //p.end();
+        p.end();
 
         //write/flush output file if necessary
         System.out.println("Writing output.");
-        //p.write();
+        p.write();
     }
 
     private static void initSignalHandlers() {
@@ -71,6 +71,7 @@ public class Main {
         System.out.println("Waiting for all processes for finish initialization");
         coordinator.waitOnBarrier();
 
+        /*
         ArrayList<Host> hosts = new ArrayList<>(parser.hosts());
         FIFOBroadcast fifo = null;
         for (Host host: hosts) {
@@ -88,11 +89,11 @@ public class Main {
             }
         }
 
-
+        System.out.println("Broadcasting messages...");
         fifo.begin();
         fifo.broadcast(new Message("Message tres important", id, id, id, false));
+        */
 
-        /*
         ArrayList<Host> hosts = new ArrayList<>(parser.hosts());
         for (Host host: hosts) {
             System.out.println(host.getId() + ", " + host.getIp() + ", " + host.getPort());
@@ -109,9 +110,9 @@ public class Main {
             }
         }
 
-        System.out.println("Broadcasting messages...");
+
         p.begin();
-        */
+
 
         System.out.println("Signaling end of broadcasting messages");
         coordinator.finishedBroadcasting();
