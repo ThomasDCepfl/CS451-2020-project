@@ -79,7 +79,7 @@ public class Main {
                 Integer port = host.getPort();
                 InetAddress ip = null;
                 try {
-                    ip = InetAddress.getByName(parser.signalIp());
+                    ip = InetAddress.getByName(host.getIp());
                 } catch (UnknownHostException e) {
                     System.out.println("Couldn't find IP address");
                 }
