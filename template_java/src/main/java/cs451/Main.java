@@ -71,12 +71,23 @@ public class Main {
         System.out.println("Waiting for all processes for finish initialization");
         coordinator.waitOnBarrier();
 
-        FIFOBroadcast fifo = new FIFOBroadcast(hosts, port, id, new Observer() {
-            @Override
-            public void deliver(Message m) {
-                System.out.println("FIFO deliver " + m);
+        ArrayList<Host> hosts = new ArrayList<>(parser.hosts());
+        FIFOBroadcast fifo = null;
+        for (Host host: hosts) {
+            System.out.println(host.getId() + ", " + host.getIp() + ", " + host.getPort());
+            Integer hid = host.getId();
+            if(pid == id) {
+                Integer port = host.getPort();
+                InetAddress ip = null;
+                try {
+                    ip = InetAddress.getByName(parser.signalIp());
+                } catch (UnknownHostException e) {
+                    System.out.println("Couldn't find IP address");
+                }
+                fifo = new FIFOBroadcast(hosts, port, id, m -> System.out.println("FIFO deliver " + m));
             }
-        });
+        }
+
 
         fifo.begin();
         fifo.broadcast(new Message("Message tres important", id, id, id, false));
