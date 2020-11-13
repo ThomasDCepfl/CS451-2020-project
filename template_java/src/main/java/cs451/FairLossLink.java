@@ -3,6 +3,7 @@ package cs451;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 public class FairLossLink extends Thread implements Link, Observer {
@@ -28,7 +29,7 @@ public class FairLossLink extends Thread implements Link, Observer {
         try {
             byte[] toSend = m.compress();
             DatagramPacket pkt = new DatagramPacket(toSend, toSend.length,
-                    m.getDestinationIP(), m.getDestinationPort());
+                    InetAddress.getByName(h.getIp()), h.getPort());
             sock.send(pkt);
         } catch (Exception e) {
             System.out.println("Couldn't send packet");

@@ -110,9 +110,7 @@ public class Main {
             }
         }
 
-
         p.begin();
-
 
         System.out.println("Signaling end of broadcasting messages");
         coordinator.finishedBroadcasting();

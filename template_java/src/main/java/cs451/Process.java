@@ -32,52 +32,10 @@ public class Process implements Observer, Broadcast{
         count = numP;
         message = content;
 
-
-
     }
 
     private void newLog(String log) {
         logs.add(log);
-    }
-
-    public InetAddress getIp() {
-        return ip;
-    }
-
-    public void setIp(InetAddress addr) {
-        ip = addr;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer portNb) {
-        port = portNb;
-    }
-
-    public DatagramSocket getSocket() {
-        return socket;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer newId) {
-        id = newId;
-    }
-
-    public Integer getProcessCount() {
-        return count;
-    }
-
-    public void setProcessCount(Integer n) {
-        count = n;
-    }
-
-    public ConcurrentLinkedQueue<String> getLogs() {
-        return logs;
     }
 
     public void write() {

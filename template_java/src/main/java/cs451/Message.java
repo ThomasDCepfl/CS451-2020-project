@@ -8,29 +8,10 @@ import java.util.Objects;
 public class Message implements Serializable {
 
     private String message;
-    private InetAddress srcIP;
-    private InetAddress dstIP;
-    private Integer srcPort;
-    private Integer dstPort;
     private Integer sender;
     private Integer senderAck;
     private Integer id;
     private Boolean ack;
-
-
-    public Message(String content, Integer identifier, InetAddress sourceIP,
-                   InetAddress destinationIP, Integer sourcePort, Integer destinationPort,
-                   Integer from, Integer fromAck, Boolean isAck) {
-        message = content;
-        srcIP = sourceIP;
-        dstIP = destinationIP;
-        srcPort= sourcePort;
-        dstPort = destinationPort;
-        sender = from;
-        senderAck = fromAck;
-        id = identifier;
-        ack = isAck;
-    }
 
     public Message(String content, Integer identifier, Integer from,
                    Integer fromAck, Boolean isAck) {
@@ -45,56 +26,12 @@ public class Message implements Serializable {
         return message;
     }
 
-    public void setMessage(String m) {
-        message = m;
-    }
-
-    public InetAddress getSourceIP() {
-        return srcIP;
-    }
-
-    public void setSourceIP(InetAddress sourceIP) {
-        srcIP = sourceIP;
-    }
-
-    public InetAddress getDestinationIP() {
-        return dstIP;
-    }
-
-    public void setDestinationIP(InetAddress destinationIP) {
-        srcIP = destinationIP;
-    }
-
-    public Integer getSourcePort() {
-        return srcPort;
-    }
-
-    public void setSourcePort(Integer sourcePort) {
-        srcPort = sourcePort;
-    }
-
-    public Integer getDestinationPort() {
-        return dstPort;
-    }
-
-    public void setDestinationPort(Integer destinationPort) {
-        dstPort = destinationPort;
-    }
-
     public Integer getSender() {
         return sender;
     }
 
-    public void setSender(Integer from) {
-        sender = from;
-    }
-
     public Integer getSenderAck() {
         return senderAck;
-    }
-
-    public void setSenderAck(Integer ack) {
-        senderAck = ack;
     }
 
     public Integer getId() {
@@ -103,10 +40,6 @@ public class Message implements Serializable {
 
     public Boolean isAck() {
         return ack;
-    }
-
-    public void setAck(boolean newAck) {
-        ack = newAck;
     }
 
     public byte[] compress() {
