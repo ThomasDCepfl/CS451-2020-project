@@ -11,7 +11,7 @@ public class StubbornLink implements Link, Observer {
     private ArrayList<Host> hs;
 
     public StubbornLink(ArrayList<Host> hosts, Integer portNb, Observer observer) {
-        link = new FairLossLink(portNb, observer);
+        link = new FairLossLink(portNb, this);
         clock = new Timer();
         deliv = new ConcurrentSkipListSet<>(Comparator.comparing(Message::getId));
         hs = new ArrayList<>(hosts);

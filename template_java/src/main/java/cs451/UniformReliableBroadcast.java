@@ -17,7 +17,7 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
     private ReentrantLock l;
 
     public UniformReliableBroadcast(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer) {
-        broadcast = new BestEffortBroadcast(hosts, portNb, observer);
+        broadcast = new BestEffortBroadcast(hosts, portNb, this);
         hs = new ArrayList<>(hosts);
         deliv = new ConcurrentSkipListSet<>();
         recv = new ConcurrentHashMap<>();

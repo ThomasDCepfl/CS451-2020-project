@@ -9,7 +9,7 @@ public class PerfectLink implements Link, Observer{
     HashSet<Message> deliv;
 
     public PerfectLink(ArrayList<Host> hosts, Integer portNb, Observer observer) {
-        link = new StubbornLink(hosts, portNb, observer);
+        link = new StubbornLink(hosts, portNb, this);
         obs = observer;
         deliv = new HashSet<>();
     }
