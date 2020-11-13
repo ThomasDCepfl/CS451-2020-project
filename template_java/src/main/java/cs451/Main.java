@@ -12,16 +12,16 @@ import java.util.stream.Stream;
 
 public class Main {
 
-    private static Process p;
+    //private static Process p;
 
     private static void handleSignal() {
         //immediately stop network packet processing
         System.out.println("Immediately stopping network packet processing.");
-        p.end();
+        //p.end();
 
         //write/flush output file if necessary
         System.out.println("Writing output.");
-        p.write();
+        //p.write();
     }
 
     private static void initSignalHandlers() {
@@ -71,6 +71,17 @@ public class Main {
         System.out.println("Waiting for all processes for finish initialization");
         coordinator.waitOnBarrier();
 
+        FIFOBroadcast fifo = new FIFOBroadcast(hosts, port, id, new Observer() {
+            @Override
+            public void deliver(Message m) {
+                System.out.println("FIFO deliver " + m);
+            }
+        });
+
+        fifo.begin();
+        fifo.broadcast(new Message("Message tres important", id, id, id, false));
+
+        /*
         ArrayList<Host> hosts = new ArrayList<>(parser.hosts());
         for (Host host: hosts) {
             System.out.println(host.getId() + ", " + host.getIp() + ", " + host.getPort());
@@ -79,7 +90,7 @@ public class Main {
                 Integer port = host.getPort();
                 InetAddress ip = null;
                 try {
-                    ip = InetAddress.getByName(parser.signalIp())
+                    ip = InetAddress.getByName(parser.signalIp());
                 } catch (UnknownHostException e) {
                     System.out.println("Couldn't find IP address");
                 }
@@ -89,16 +100,7 @@ public class Main {
 
         System.out.println("Broadcasting messages...");
         p.begin();
-
-        FIFOBroadcast fifo = new FIFOBroadcast(hosts, port, id, new Observer() {
-           @Override
-           public void deliver(Message m) {
-               System.out.println("FIFO deliver " + m);
-           }
-        });
-
-        fifo.begin();
-        fifo.broadcast(new Message("Message tres important", id, id, id, false));
+        */
 
         System.out.println("Signaling end of broadcasting messages");
         coordinator.finishedBroadcasting();
