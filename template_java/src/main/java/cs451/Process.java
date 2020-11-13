@@ -9,29 +9,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Process implements Observer, Broadcast{
     private Integer id;
-    private InetAddress ip;
-    private Integer port;
-    private DatagramSocket socket;
+
     private Integer count;
     private ConcurrentLinkedQueue<String> logs = new ConcurrentLinkedQueue<String>();
     private Broadcast broadcast;
-    private String message;
 
-    public Process(Integer pId, ArrayList<Host> hosts, InetAddress addr, Integer portNumber,
-                    Integer numP, String content) {
+    public Process(Integer pId, ArrayList<Host> hosts, Integer portNumber,
+                    Integer numP) {
         id = pId;
-        ip = addr;
-        port = portNumber;
-        try {
-            socket = new DatagramSocket(port, ip);
-        } catch (SocketException e) {
-            System.out.println("Socket could not be created.");
-        }
-
         broadcast = new FIFOBroadcast(hosts, portNumber, id, this);
         count = numP;
-        message = content;
-
     }
 
     private void newLog(String log) {

@@ -77,13 +77,7 @@ public class Main {
             Integer hid = host.getId();
             if(hid == id) {
                 Integer port = host.getPort();
-                InetAddress ip = null;
-                try {
-                    ip = InetAddress.getByName(host.getIp());
-                } catch (UnknownHostException e) {
-                    System.out.println("Couldn't find IP address");
-                }
-                p = new Process(hid, hosts, ip, port, n, parser.output());
+                p = new Process(hid, hosts, port, n);
             }
         }
 
