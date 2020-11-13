@@ -13,12 +13,15 @@ public class Process implements Observer, Broadcast{
     private Integer count;
     private ConcurrentLinkedQueue<String> logs = new ConcurrentLinkedQueue<String>();
     private Broadcast broadcast;
+    private String message;
 
     public Process(Integer pId, ArrayList<Host> hosts, Integer portNumber,
-                    Integer numP) {
+                    Integer numP, String content) {
         id = pId;
         broadcast = new FIFOBroadcast(hosts, portNumber, id, this);
         count = numP;
+        message = content;
+
     }
 
     private void newLog(String log) {

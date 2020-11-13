@@ -77,7 +77,7 @@ public class Main {
             Integer hid = host.getId();
             if(hid == id) {
                 Integer port = host.getPort();
-                p = new Process(hid, hosts, port, n);
+                p = new Process(hid, hosts, port, n, parser.output());
             }
         }
 
