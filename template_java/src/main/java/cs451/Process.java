@@ -28,7 +28,7 @@ public class Process implements Observer, Broadcast{
             System.out.println("Socket could not be created.");
         }
 
-        broadcast = new FIFOBroadcast(hosts, portNumber, id,this);
+        broadcast = new FIFOBroadcast(hosts, portNumber, id, this);
         count = numP;
         message = content;
 

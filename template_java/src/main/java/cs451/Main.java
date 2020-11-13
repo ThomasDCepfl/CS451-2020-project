@@ -90,6 +90,16 @@ public class Main {
         System.out.println("Broadcasting messages...");
         p.begin();
 
+        FIFOBroadcast fifo = new FIFOBroadcast(hosts, port, id, new Observer() {
+           @Override
+           public void deliver(Message m) {
+               System.out.println("FIFO deliver " + m);
+           }
+        });
+
+        fifo.begin();
+        fifo.broadcast(new Message("Message tres important", id, id, id, false));
+
         System.out.println("Signaling end of broadcasting messages");
         coordinator.finishedBroadcasting();
 
