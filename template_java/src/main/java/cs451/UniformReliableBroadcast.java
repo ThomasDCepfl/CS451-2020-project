@@ -38,14 +38,12 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
 
         l.lock();
 
-        if(isAck.get(mId) == null) {
+        if(isAck.containsKey(mId)) {
+            isAck.get(mId).add(m.getSender());
+        } else {
             ConcurrentSkipListSet<Integer> ack = new ConcurrentSkipListSet<>();
             ack.add(m.getSender());
             isAck.put(mId, ack);
-        } else {
-            ConcurrentSkipListSet<Integer> ack = isAck.get(mId);
-            ack.add(m.getSender());
-            isAck.replace(mId, ack);
         }
 
         if(!recv.containsKey(mId)) {
@@ -56,8 +54,8 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
         for(Integer id: recv.keySet()) {
             if (!deliv.contains(id) && canDeliver(id)){
                 System.out.println("Deliver URB");
-                obs.deliver(recv.get(id));
                 deliv.add(id);
+                obs.deliver(recv.get(id));
 ;            }
         }
         l.unlock();

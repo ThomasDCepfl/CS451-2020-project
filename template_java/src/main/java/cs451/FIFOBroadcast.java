@@ -36,7 +36,8 @@ public class FIFOBroadcast implements Broadcast, Observer{
             for(Integer id: recv.keySet()) {
                 Message transmission = recv.get(id);
                 Integer senderAck = transmission.getSenderAck();
-                if(transmission.getId() == order[senderAck]) {
+                System.out.println("id: " + id + " " + transmission.getId() + ", order[senderAck]" + order[senderAck]);
+                if(id == order[senderAck]) {
                     recv.remove(id);
                     ++order[senderAck];
                     System.out.println("Deliver FIFO");
