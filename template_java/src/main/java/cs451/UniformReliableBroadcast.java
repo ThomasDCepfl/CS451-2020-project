@@ -50,7 +50,7 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
 
         if(!recv.containsKey(mId)) {
             recv.put(mId, m);
-            broadcast.broadcast(new Message(m.getMessage(), m.getId(), sender, m.getSenderAck(), m.isAck()));
+            broadcast.broadcast(new Message(m.getId(), sender, m.getSenderAck(), m.isAck()));
         }
 
         for(Integer id: recv.keySet()) {
@@ -75,7 +75,7 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
     @Override
     public void broadcast(Message m) {
         l.lock();
-        Message msg = new Message(m.getMessage(), m.getId(), sender, sender, m.isAck());
+        Message msg = new Message(m.getId(), sender, sender, m.isAck());
         recv.put(msg.getId(), msg);
         l.unlock();
         broadcast.broadcast(msg);
