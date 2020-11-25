@@ -17,7 +17,7 @@ public class Process implements Observer, Broadcast{
     public Process(Integer pId, ArrayList<Host> hosts, Integer portNumber,
                     Integer numP, String content) {
         id = pId;
-        broadcast = new FIFOBroadcast(hosts, portNumber, id, this);
+        broadcast = new FIFOBroadcast(hosts, portNumber, pId, this);
         count = numP;
         message = content;
 

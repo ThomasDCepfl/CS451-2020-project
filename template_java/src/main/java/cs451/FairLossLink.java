@@ -39,6 +39,7 @@ public class FairLossLink extends Thread implements Link, Observer {
     @Override
     public void begin() {
         run = true;
+        new Thread(this).start();
     }
 
     @Override
