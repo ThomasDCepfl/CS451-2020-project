@@ -40,7 +40,7 @@ public class StubbornLink implements Link, Observer {
                 }
             }
         };
-        clock.schedule(task, 0, 100);
+        clock.schedule(task, 0L, 250);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class StubbornLink implements Link, Observer {
     }
 
     @Override
-    public void deliver(Message m) { // how to select correct host according to sender
-        if(!m.isAck()) deliv.remove(m);
+    public void deliver(Message m) {
+        if(m.isAck()) deliv.remove(m);
         else {
             Host host = hs.get(0);
             Integer sender = m.getSender();

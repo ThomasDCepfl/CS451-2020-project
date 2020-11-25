@@ -2,7 +2,6 @@ package cs451;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class FIFOBroadcast implements Broadcast, Observer{
 
@@ -58,6 +57,6 @@ public class FIFOBroadcast implements Broadcast, Observer{
 
     @Override
     public void broadcast(Message m) {
-        broadcast.broadcast(new Message(m.getMessage(), ++wasDeliv, sender, m.getSender(), m.isAck()));
+        broadcast.broadcast(new Message(++wasDeliv, sender, m.getSenderAck(), m.isAck()));
     }
 }

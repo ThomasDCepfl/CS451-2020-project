@@ -54,15 +54,14 @@ public class FairLossLink extends Thread implements Link, Observer {
     @Override
     public void run() {
         while(run) {
-            DatagramPacket pkt = new DatagramPacket(bu, bu.length);
             try {
+                DatagramPacket pkt = new DatagramPacket(bu, bu.length);
                 sock.receive(pkt);
+                Message m = Message.uncompress(pkt.getData());
+                obs.deliver(m);
             } catch (IOException e) {
                 System.out.println("Couldn't receive packet");
             }
-
-            Message m = Message.uncompress(pkt.getData());
-            obs.deliver(m);
-         }
+        }
     }
 }

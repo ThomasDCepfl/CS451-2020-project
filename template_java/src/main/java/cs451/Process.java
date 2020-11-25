@@ -2,7 +2,6 @@ package cs451;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -43,7 +42,7 @@ public class Process implements Observer, Broadcast{
     public void begin() {
         broadcast.begin();
         for(Integer n = 1; n <= count; ++n) {
-            Message m = new Message(message, n, id, id, false);
+            Message m = new Message(n, id, id, false);
             broadcast(m);
             String str = "b " + m.getId() + "\n";
             newLog(str);
