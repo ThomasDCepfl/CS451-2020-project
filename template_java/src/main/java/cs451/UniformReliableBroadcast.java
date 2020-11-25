@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class UniformReliableBroadcast implements Broadcast, Observer {
-    private BestEffortBroadcast broadcast;
     private ArrayList<Host> hs;
+    private BestEffortBroadcast broadcast;
     private ConcurrentSkipListSet<Integer> deliv;
     private ConcurrentHashMap<Integer, Message> recv;
     private ConcurrentHashMap<Integer, ConcurrentSkipListSet<Integer>> isAck;
@@ -16,8 +16,8 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
     private ReentrantLock l;
 
     public UniformReliableBroadcast(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer) {
-        broadcast = new BestEffortBroadcast(hosts, portNb, this);
         hs = new ArrayList<>(hosts);
+        broadcast = new BestEffortBroadcast(hosts, portNb, this);
         deliv = new ConcurrentSkipListSet<>();
         recv = new ConcurrentHashMap<>();
         isAck = new ConcurrentHashMap<>();
@@ -34,9 +34,9 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
 
     @Override
     public void deliver(Message m) {
-        Integer mId = m.getId();
 
         l.lock();
+        Integer mId = m.getId();
 
         if(isAck.containsKey(mId)) {
             isAck.get(mId).add(m.getSender());
@@ -48,7 +48,7 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
 
         if(!recv.containsKey(mId)) {
             recv.put(mId, m);
-            broadcast.broadcast(new Message(m.getId(), sender, m.getSenderAck(), m.isAck()));
+            broadcast.broadcast(m); // new Message(m.getId(), sender, m.getSenderAck(), m.isAck())
         }
 
         for(Integer id: recv.keySet()) {
@@ -74,9 +74,9 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
     @Override
     public void broadcast(Message m) {
         l.lock();
-        Message msg = new Message(m.getId(), sender, sender, m.isAck());
-        recv.put(msg.getId(), msg);
+        //Message msg = new Message(m.getId(), sender, sender, m.isAck());
+        recv.put(m.getId(), m);
         l.unlock();
-        broadcast.broadcast(msg);
+        broadcast.broadcast(m);
     }
 }

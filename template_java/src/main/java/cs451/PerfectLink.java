@@ -4,22 +4,23 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class PerfectLink implements Link, Observer{
+
+    private StubbornLink link;
+    private HashSet<Message> deliv;
     private Observer obs;
-    StubbornLink link;
-    HashSet<Message> deliv;
 
     public PerfectLink(ArrayList<Host> hosts, Integer portNb, Observer observer) {
         link = new StubbornLink(hosts, portNb, this);
-        obs = observer;
         deliv = new HashSet<>();
+        obs = observer;
     }
 
     @Override
     public void deliver(Message m) {
         if (!deliv.contains(m)) {
-            deliv.add(m);
             System.out.println("Deliver PL");
             obs.deliver(m);
+            deliv.add(m);
         }
     }
 

@@ -3,10 +3,10 @@ package cs451;
 import java.util.ArrayList;
 
 public class BestEffortBroadcast implements Broadcast, Observer{
-    private PerfectLink link;
-    private ArrayList<Host> hs;
-    private Observer obs;
 
+    private ArrayList<Host> hs;
+    private PerfectLink link;
+    private Observer obs;
 
     public BestEffortBroadcast(ArrayList<Host> hosts, Integer portNb, Observer observer) {
         hs = new ArrayList<>(hosts);

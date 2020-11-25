@@ -8,20 +8,20 @@ import java.net.SocketException;
 
 public class FairLossLink extends Thread implements Link, Observer {
 
-    private Observer obs;
     private DatagramSocket sock;
+    private Observer obs;
     private byte[] bu;
     private boolean run;
 
     public FairLossLink(Integer portNb, Observer observer) {
-        obs = observer;
-        run = false;
-        bu = new byte[65655];
         try {
             sock = new DatagramSocket(portNb);
         } catch (SocketException e) {
             System.out.println("Couldn't create socket in Fair Loss Link.");
         }
+        obs = observer;
+        bu = new byte[65655];
+        run = false;
     }
 
     @Override

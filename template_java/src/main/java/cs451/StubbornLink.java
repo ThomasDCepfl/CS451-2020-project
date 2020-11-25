@@ -4,17 +4,18 @@ import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class StubbornLink implements Link, Observer {
-    private Observer obs;
+
+    private ArrayList<Host> hs;
     private FairLossLink link;
     private Timer clock;
     private ConcurrentSkipListSet<Message> deliv;
-    private ArrayList<Host> hs;
+    private Observer obs;
 
     public StubbornLink(ArrayList<Host> hosts, Integer portNb, Observer observer) {
+        hs = new ArrayList<>(hosts);
         link = new FairLossLink(portNb, this);
         clock = new Timer();
         deliv = new ConcurrentSkipListSet<>(Comparator.comparing(Message::getId));
-        hs = new ArrayList<>(hosts);
         obs = observer;
     }
 
@@ -25,7 +26,7 @@ public class StubbornLink implements Link, Observer {
     }
 
     @Override
-    public void begin() { // how to select correct host acccording to sender
+    public void begin() {
         link.begin();
         TimerTask task = new TimerTask() {
             @Override
@@ -40,7 +41,7 @@ public class StubbornLink implements Link, Observer {
                 }
             }
         };
-        clock.schedule(task, 0L, 250);
+        clock.schedule(task, 0L, 200L);
     }
 
     @Override
