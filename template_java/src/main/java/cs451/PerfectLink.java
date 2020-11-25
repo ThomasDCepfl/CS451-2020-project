@@ -21,7 +21,6 @@ public class PerfectLink implements Link, Observer{
             System.out.println("Deliver PL");
             obs.deliver(m);
         }
-
     }
 
     @Override

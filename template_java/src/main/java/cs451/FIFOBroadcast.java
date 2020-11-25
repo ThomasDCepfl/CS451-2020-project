@@ -59,7 +59,6 @@ public class FIFOBroadcast implements Broadcast, Observer{
 
     @Override
     public void broadcast(Message m) {
-        ++wasDeliv;
-        broadcast.broadcast(new Message(wasDeliv, sender, m.getSenderAck(), m.isAck()));
+        broadcast.broadcast(new Message(wasDeliv++, sender, m.getSenderAck(), m.isAck()));
     }
 }
