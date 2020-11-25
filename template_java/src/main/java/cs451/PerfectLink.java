@@ -18,6 +18,7 @@ public class PerfectLink implements Link, Observer{
     public void deliver(Message m) {
         if (!deliv.contains(m)) {
             deliv.add(m);
+            System.out.println("Deliver PL");
             obs.deliver(m);
         }
 

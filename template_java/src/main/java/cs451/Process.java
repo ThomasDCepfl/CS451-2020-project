@@ -61,6 +61,7 @@ public class Process implements Observer, Broadcast{
 
     @Override
     public void deliver(Message m) {
+        System.out.println("Deliver process");
         String str = "d " + m.getSenderAck() + " " + m.getId() + "\n";
         newLog(str);
     }

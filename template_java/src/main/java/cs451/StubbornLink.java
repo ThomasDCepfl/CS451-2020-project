@@ -59,6 +59,7 @@ public class StubbornLink implements Link, Observer {
                 if (sender == h.getId()) host = h;
             }
             send(host, m);
+            System.out.println("Deliver SL");
             obs.deliver(m);
         }
     }

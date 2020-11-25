@@ -33,6 +33,7 @@ public class BestEffortBroadcast implements Broadcast, Observer{
 
     @Override
     public void deliver(Message m) {
+        System.out.println("Deliver BEB");
         obs.deliver(m);
     }
 }

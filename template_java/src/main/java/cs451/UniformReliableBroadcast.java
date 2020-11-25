@@ -55,6 +55,7 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
 
         for(Integer id: recv.keySet()) {
             if (!deliv.contains(id) && canDeliver(id)){
+                System.out.println("Deliver URB");
                 obs.deliver(recv.get(id));
                 deliv.add(id);
 ;            }

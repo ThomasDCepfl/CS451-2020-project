@@ -39,6 +39,7 @@ public class FIFOBroadcast implements Broadcast, Observer{
                 if(id == order[senderAck]) {
                     recv.remove(id);
                     ++order[senderAck];
+                    System.out.println("Deliver FIFO");
                     obs.deliver(transmission);
                 }
             }
