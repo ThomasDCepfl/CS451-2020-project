@@ -17,7 +17,7 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
 
     public UniformReliableBroadcast(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer) {
         hs = new ArrayList<>(hosts);
-        broadcast = new BestEffortBroadcast(hosts, portNb, this);
+        broadcast = new BestEffortBroadcast(hosts, portNb, from, this);
         deliv = new ConcurrentSkipListSet<>();
         recv = new ConcurrentHashMap<>();
         isAck = new ConcurrentHashMap<>();
@@ -48,12 +48,11 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
 
         if(!recv.containsKey(mId)) {
             recv.put(mId, m);
-            broadcast.broadcast(m); // new Message(m.getId(), sender, m.getSenderAck(), m.isAck())
+            broadcast.broadcast(new Message(m.getId(), sender, m.getSenderAck(), m.isAck()));
         }
 
         for(Integer id: recv.keySet()) {
             if (canDeliver(id) && !deliv.contains(id)){
-                System.out.println("Deliver URB");
                 deliv.add(id);
                 obs.deliver(recv.get(id));
 ;            }
@@ -74,9 +73,9 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
     @Override
     public void broadcast(Message m) {
         l.lock();
-        //Message msg = new Message(m.getId(), sender, sender, m.isAck());
-        recv.put(m.getId(), m);
+        Message msg = new Message(m.getId(), sender, sender, m.isAck());
+        recv.put(m.getId(), msg);
         l.unlock();
-        broadcast.broadcast(m);
+        broadcast.broadcast(msg);
     }
 }

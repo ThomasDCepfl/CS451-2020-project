@@ -7,13 +7,15 @@ public class StubbornLink implements Link, Observer {
 
     private ArrayList<Host> hs;
     private FairLossLink link;
+    private Integer sender;
     private Timer clock;
     private ConcurrentSkipListSet<Message> deliv;
     private Observer obs;
 
-    public StubbornLink(ArrayList<Host> hosts, Integer portNb, Observer observer) {
+    public StubbornLink(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer) {
         hs = new ArrayList<>(hosts);
         link = new FairLossLink(portNb, this);
+        sender = from;
         clock = new Timer();
         deliv = new ConcurrentSkipListSet<>(Comparator.comparing(Message::getId));
         obs = observer;
@@ -32,10 +34,10 @@ public class StubbornLink implements Link, Observer {
             @Override
             public void run() {
                 for (Message msg : deliv){
-                    Host host = hs.get(0);
-                    Integer sender = msg.getSender();
+                    Host host = null; // = hs.get(0)
+                    Integer s = msg.getSender();
                     for(Host h: hs) {
-                        if (sender == h.getId()) host = h;
+                        if (s == h.getId()) host = h;
                     }
                     link.send(host, msg);
                 }
@@ -54,13 +56,12 @@ public class StubbornLink implements Link, Observer {
     public void deliver(Message m) {
         if(m.isAck()) deliv.remove(m);
         else {
-            Host host = hs.get(0);
-            Integer sender = m.getSender();
+            Host host = null; // = hs.get(0)
+            Integer s = m.getSender();
             for(Host h: hs) {
-                if (sender == h.getId()) host = h;
+                if (s == h.getId()) host = h;
             }
-            send(host, new Message(m.getId(), m.getSender(), m.getSenderAck(), true));
-            System.out.println("Deliver SL");
+            send(host, new Message(m.getId(), sender, m.getSenderAck(), true));
             obs.deliver(m);
         }
     }

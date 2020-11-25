@@ -45,11 +45,11 @@ public class FairLossLink extends Thread implements Link, Observer {
     @Override
     public void end() {
         run = false;
+        sock.close();
     }
 
     @Override
     public void deliver(Message m) {
-        System.out.println("Deliver FLL");
         obs.deliver(m);
     }
 

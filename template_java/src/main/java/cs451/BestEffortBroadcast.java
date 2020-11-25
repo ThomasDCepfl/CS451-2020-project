@@ -8,9 +8,9 @@ public class BestEffortBroadcast implements Broadcast, Observer{
     private PerfectLink link;
     private Observer obs;
 
-    public BestEffortBroadcast(ArrayList<Host> hosts, Integer portNb, Observer observer) {
+    public BestEffortBroadcast(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer) {
         hs = new ArrayList<>(hosts);
-        link = new PerfectLink(hosts, portNb, this);
+        link = new PerfectLink(hosts, portNb, from, this);
         obs = observer;
     }
 
@@ -33,7 +33,6 @@ public class BestEffortBroadcast implements Broadcast, Observer{
 
     @Override
     public void deliver(Message m) {
-        System.out.println("Deliver BEB");
         obs.deliver(m);
     }
 }

@@ -9,7 +9,7 @@ public class FIFOBroadcast implements Broadcast, Observer{
     private ConcurrentHashMap<Integer, Message> recv;
     private int [] order;
     private Integer wasDeliv;
-    //private Integer sender;
+    private Integer sender;
     private Observer obs;
 
     public FIFOBroadcast(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer) {
@@ -21,7 +21,7 @@ public class FIFOBroadcast implements Broadcast, Observer{
             order[i] = 1;
         }
         wasDeliv = 1;
-        //sender = from;
+        sender = from;
         obs = observer;
     }
 
@@ -30,7 +30,6 @@ public class FIFOBroadcast implements Broadcast, Observer{
         Integer mId = m.getId();
         if(mId >= order[m.getSenderAck()]) {
             recv.put(mId, m);
-            System.out.println("Deliver FIFO ?");
             for(Integer id: recv.keySet()) {
                 Message transmission = recv.get(id);
                 Integer senderAck = transmission.getSenderAck();
@@ -38,7 +37,6 @@ public class FIFOBroadcast implements Broadcast, Observer{
                 if(id == order[senderAck]) {
                     recv.remove(id);
                     ++order[senderAck];
-                    System.out.println("Deliver FIFO");
                     obs.deliver(transmission);
                 }
             }
@@ -57,6 +55,6 @@ public class FIFOBroadcast implements Broadcast, Observer{
 
     @Override
     public void broadcast(Message m) {
-        broadcast.broadcast(new Message(wasDeliv++, m.getSender(), m.getSenderAck(), m.isAck()));
+        broadcast.broadcast(new Message(wasDeliv++, sender, m.getSenderAck(), m.isAck()));
     }
 }

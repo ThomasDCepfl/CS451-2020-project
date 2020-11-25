@@ -9,8 +9,8 @@ public class PerfectLink implements Link, Observer{
     private HashSet<Message> deliv;
     private Observer obs;
 
-    public PerfectLink(ArrayList<Host> hosts, Integer portNb, Observer observer) {
-        link = new StubbornLink(hosts, portNb, this);
+    public PerfectLink(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer) {
+        link = new StubbornLink(hosts, portNb, from, this);
         deliv = new HashSet<>();
         obs = observer;
     }
@@ -18,7 +18,6 @@ public class PerfectLink implements Link, Observer{
     @Override
     public void deliver(Message m) {
         if (!deliv.contains(m)) {
-            System.out.println("Deliver PL");
             obs.deliver(m);
             deliv.add(m);
         }
