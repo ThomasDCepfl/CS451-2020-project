@@ -1,6 +1,7 @@
 package cs451;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,14 +34,14 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
         for(int i = 1; i <= n; ++i) {
             vectorClock[i] = 0;
             causalOrder[i] = 0;
-            recv.put(i, new ConcurrentSkipListSet<>());
+            recv.put(i, new ConcurrentSkipListSet<>(Comparator.comparing(Message::getId)));
         }
         lb = new ReentrantLock();
         ld = new ReentrantLock();
     }
 
 
-    public boolean compVectorClocks(int[] v1, int[] v2) {
+    private boolean compVectorClocks(int[] v1, int[] v2) {
         for (int i = 0; i < v1.length; ++i) {
             if (v1[i] > v2[i]) {
                 return false;
