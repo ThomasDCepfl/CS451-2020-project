@@ -15,10 +15,8 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
     private ConcurrentHashMap<Integer, ConcurrentSkipListSet<Message>> recv;
     private Set<Integer> causal;
     private int[] vectorClock;
-    private int[] causalOrder;
     private Observer obs;
-    private ReentrantLock lb; // for broadcasting
-    private ReentrantLock ld; // for delivering
+    private ReentrantLock l;
 
     public LocalizedCausalBroadcast(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer,
                                     Integer position, Set<Integer> causality){
@@ -30,14 +28,11 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
         causal = new HashSet<>(causality);
         int n = hosts.size();
         vectorClock = new int[n + 1];
-        causalOrder = new int[n + 1];
         for(int i = 1; i <= n; ++i) {
             vectorClock[i] = 0;
-            causalOrder[i] = 0;
             recv.put(i, new ConcurrentSkipListSet<>(Comparator.comparing(Message::getId)));
         }
-        lb = new ReentrantLock();
-        ld = new ReentrantLock();
+        l = new ReentrantLock();
     }
 
 
@@ -62,18 +57,17 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
 
     @Override
     public void broadcast(Message m) {
-        lb.lock();
+        l.lock();
         int [] vc = vectorClock.clone();
         vc[order] = id;
         ++id;
-        lb.unlock();
+        l.unlock();
         Message message = new Message(m.getId(), m.getSender(), m.getSenderAck(), m.isAck(), vc);
         broadcast.broadcast(message);
     }
 
     @Override
     public void deliver(Message m) {
-        ld.lock();
 
         Integer mId = m.getId();
         if(recv.containsKey(mId)) {
@@ -87,22 +81,19 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
         boolean oneMoreTime = true;
         while(oneMoreTime) {
             oneMoreTime = false;
-            for (int i = 1; i < causalOrder.length; ++i) {
+            for (int i = 1; i < vectorClock.length; ++i) {
                 for(Message msg: recv.get(i)){
-                    if(compVectorClocks(msg.getVectorClock(), causalOrder)) {
-                        ++causalOrder[i];
-                        oneMoreTime = true;
-                        if (causal.contains(i)) {
-                            lb.lock();
-                            ++vectorClock[i];
-                            lb.unlock();
-                        }
+                    l.lock();
+                    if(compVectorClocks(msg.getVectorClock(), vectorClock) && causal.contains(i)) {
+                        ++vectorClock[i];
+                        l.unlock();
                         obs.deliver(msg);
+                        oneMoreTime = true;
                     }
+                    if(l.isHeldByCurrentThread()) l.unlock();
                 }
             }
         }
 
-        ld.unlock();
     }
 }
