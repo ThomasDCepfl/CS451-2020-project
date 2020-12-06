@@ -73,7 +73,7 @@ public class UniformReliableBroadcast implements Broadcast, Observer {
     @Override
     public void broadcast(Message m) {
         l.lock();
-        Message msg = new Message(m.getId(), sender, sender, m.isAck());
+        Message msg = new Message(m.getId(), sender, sender, m.isAck(), m.getVectorClock());
         recv.put(m.getId(), msg);
         l.unlock();
         broadcast.broadcast(msg);
