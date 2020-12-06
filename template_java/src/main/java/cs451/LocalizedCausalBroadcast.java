@@ -95,7 +95,7 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
                         if (causal.contains(i)) {
                             lb.lock();
                             ++vectorClock[i];
-                            ld.unlock();
+                            lb.unlock();
                         }
                         obs.deliver(msg);
                     }
