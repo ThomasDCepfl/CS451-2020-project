@@ -57,7 +57,6 @@ public class FairLossLink extends Thread implements Link, Observer {
     public void run() {
         while(run) {
             try {
-                System.out.println("Run UDP");
                 DatagramPacket pkt = new DatagramPacket(bu, bu.length);
                 sock.receive(pkt);
                 Message m = Message.uncompress(pkt.getData());

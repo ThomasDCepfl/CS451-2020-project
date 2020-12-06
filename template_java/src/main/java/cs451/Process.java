@@ -3,6 +3,7 @@ package cs451;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
@@ -10,15 +11,26 @@ public class Process implements Observer, Broadcast{
     private Integer id;
 
     private Integer count;
-    private ConcurrentLinkedQueue<String> logs = new ConcurrentLinkedQueue<String>();
+    private ConcurrentLinkedQueue<String> logs;
     private Broadcast broadcast;
     private String message;
 
     public Process(Integer pId, ArrayList<Host> hosts, Integer portNumber,
                     Integer numP, String content) {
         id = pId;
-        broadcast = new FIFOBroadcast(hosts, portNumber, pId, this);
         count = numP;
+        broadcast = new FIFOBroadcast(hosts, portNumber, pId, this);
+        logs = new ConcurrentLinkedQueue<>();
+        message = content;
+
+    }
+
+    public Process(Integer pId, ArrayList<Host> hosts, Integer portNumber,
+                   Integer numP, String content, Set<Integer> causal) {
+        id = pId;
+        count = numP;
+        broadcast = new LocalizedCausalBroadcast(hosts, portNumber, pId, this, pId, causal);
+        logs = new ConcurrentLinkedQueue<>();
         message = content;
 
     }

@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,14 +58,29 @@ public class Main {
         System.out.println("Output: " + parser.output());
         // if config is defined; always check before parser.config()
         List<String> configuration = null;
+        Set<Integer> causal = null;
         Integer n = 0;
+
         if (parser.hasConfig()) {
             System.out.println("Config: " + parser.config());
             try (Stream<String> s = Files.lines(Paths.get(parser.config()))) {
                 configuration = s.collect(Collectors.toList());
-                if (configuration != null) n = Integer.parseInt(configuration.get(0));
             } catch (IOException e) {
                 System.out.println("Configuration failed.");
+            }
+        }
+
+        if (configuration != null) {
+            n = Integer.parseInt(configuration.get(0));
+            Integer configSize = configuration.size();
+            if(configSize > 1) {
+                for(String conf: configuration.subList(1, configSize)) {
+                    String [] words = conf.split(" ");
+                    if(Integer.parseInt(words[0]) == parser.myId()) {
+                        causal = Arrays.stream(words).map(Integer::valueOf).collect(Collectors.toSet());
+                        break;
+                    }
+                }
             }
         }
 
@@ -75,7 +93,12 @@ public class Main {
             Integer hid = h.getId();
             if(hid == id) {
                 Integer port = h.getPort();
-                p = new Process(hid, hosts, port, n, parser.output());
+                if(causal == null) { // FIFO
+                    p = new Process(hid, hosts, port, n, parser.output());
+                } else { // LC
+                    p = new Process(hid, hosts, port, n, parser.output(), causal);
+                    System.out.println(causal);
+                }
             }
         }
 
