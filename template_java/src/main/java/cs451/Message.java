@@ -26,7 +26,8 @@ public class Message implements Serializable {
         senderAck = fromAck;
         id = identifier;
         ack = isAck;
-        vectorClock = vClock.clone();
+        if(vClock == null) vectorClock = null;
+        else vectorClock = vClock.clone();
     }
 
 
