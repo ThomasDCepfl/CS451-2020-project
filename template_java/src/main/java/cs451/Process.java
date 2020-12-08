@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
@@ -26,7 +27,7 @@ public class Process implements Observer, Broadcast{
     }
 
     public Process(Integer pId, ArrayList<Host> hosts, Integer portNumber,
-                   Integer numP, String content, Set<Integer> causal) {
+                   Integer numP, String content, ConcurrentHashMap<Integer, Set<Integer>> causal) {
         id = pId;
         count = numP;
         broadcast = new LocalizedCausalBroadcast(hosts, portNumber, pId, this, pId, causal);

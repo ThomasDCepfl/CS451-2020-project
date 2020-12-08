@@ -13,30 +13,30 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
     private Integer id;
     private Integer order;
     private ConcurrentSkipListSet<Message> recv;
-    private Set<Integer> causal;
+    private ConcurrentHashMap<Integer, Set<Integer>> causal;
     private int[] vectorClock;
     private Observer obs;
     private ReentrantLock l;
 
     public LocalizedCausalBroadcast(ArrayList<Host> hosts, Integer portNb, Integer from, Observer observer,
-                                    Integer position, Set<Integer> causality){
+                                    Integer position, ConcurrentHashMap<Integer, Set<Integer>> causality){
         broadcast = new UniformReliableBroadcast(hosts, portNb, from, this);
         id = 0;
         order = position;
         obs = observer;
         recv =  new ConcurrentSkipListSet<>(Comparator.comparing(Message::getId));
-        causal = new HashSet<>(causality);
+        causal = new ConcurrentHashMap<>(causality);
         int n = hosts.size();
         vectorClock = new int[n + 1];
-        for(int i = 1; i <= n; ++i) {
+        for(int i = 1; i < n; ++i) {
             vectorClock[i] = 0;
         }
         l = new ReentrantLock();
     }
 
 
-    private boolean compVectorClocks(int[] v1, int[] v2) {
-        for (int i = 0; i < v1.length; ++i) {
+    private boolean compVectorClocks(int[] v1, int[] v2, Set<Integer> indices) {
+        for (int i: indices) {
             if (v1[i] > v2[i]) {
                 return false;
             }
@@ -74,8 +74,8 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
             for(Message msg: recv){
                 Integer from = msg.getSenderAck();
                 l.lock();
-                if(compVectorClocks(msg.getVectorClock(), vectorClock) && causal.contains(from)) {
-                    ++vectorClock[from];
+                if(compVectorClocks(msg.getVectorClock(), vectorClock, causal.get(from))) {
+                    vectorClock[from -1]++;
                     l.unlock();
                     obs.deliver(msg);
                     oneMoreTime = true;
