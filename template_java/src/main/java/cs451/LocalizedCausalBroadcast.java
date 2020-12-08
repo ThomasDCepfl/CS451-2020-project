@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -79,6 +78,7 @@ public class LocalizedCausalBroadcast implements Observer, Broadcast {
                     l.unlock();
                     obs.deliver(msg);
                     oneMoreTime = true;
+                    recv.remove(msg);
                 }
                 if(l.isHeldByCurrentThread()) l.unlock();
             }
