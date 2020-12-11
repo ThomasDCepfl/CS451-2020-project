@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,7 +58,7 @@ public class Main {
         System.out.println("Output: " + parser.output());
         // if config is defined; always check before parser.config()
         List<String> configuration = null;
-        Set<Integer> causal = null;
+        ConcurrentHashMap<Integer, Set<Integer>> causal = new ConcurrentHashMap<>();
         Integer n = 0;
 
         if (parser.hasConfig()) {
@@ -75,10 +76,7 @@ public class Main {
             if(configSize > 1) {
                 for(String conf: configuration.subList(1, configSize)) {
                     String [] words = conf.split(" ");
-                    if(Integer.parseInt(words[0]) == parser.myId()) {
-                        causal = Arrays.stream(words).map(Integer::valueOf).collect(Collectors.toSet());
-                        break;
-                    }
+                    causal.put(Integer.parseInt(words[0]), Arrays.stream(words).map(Integer::valueOf).collect(Collectors.toSet()));
                 }
             }
         }
